@@ -1,0 +1,94 @@
+//! user_eg3.cpp -- Invoke rbox and qhull from C++
+
+#include "RboxPoints.h"
+#include "QhullError.h"
+#include "QhullQh.h"
+#include "QhullFacet.h"
+#include "QhullFacetList.h"
+#include "QhullLinkedList.h"
+#include "QhullVertex.h"
+#include "Qhull.h"
+
+#include <cstdio>   /* for printf() of help message */
+#include <ostream>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <vector>
+#include <iostream>
+
+using std::cerr;
+using std::cin;
+using std::cout;
+using std::endl;
+using std::vector;
+
+using orgQhull::Qhull;
+using orgQhull::QhullError;
+using orgQhull::QhullFacet;
+using orgQhull::QhullFacetList;
+using orgQhull::QhullQh;
+using orgQhull::RboxPoints;
+using orgQhull::QhullVertex;
+using orgQhull::QhullVertexSet;
+
+int main(int argc, char **argv);
+int user_eg3(int argc, char **argv);
+
+char prompt[]= "\n\
+user_eg3 -- demonstrate calling rbox and qhull from C++.\n\
+Jake Hansen was here. \n\
+\n\
+  eg-100                       Run the example in qh-code.htm\n\
+  rbox \"200 D4\" ...            Generate points from rbox\n\
+  qhull \"d p\" ...              Run qhull and produce output\n\
+  qhull-cout \"o\" ...           Run qhull and produce output to cout\n\
+  facets                       Print facets when done\n\
+\n\
+For example\n\
+  user_eg3 rbox qhull\n\
+  user_eg3 rbox qhull d\n\
+  user_eg3 rbox \"10 D2\"  \"2 D2\" qhull  \"s p\" facets\n\
+\n\
+";
+
+
+/*--------------------------------------------
+-user_eg3-  main procedure of user_eg3 application
+*/
+int main(int argc, char **argv) {
+    try{
+        return user_eg3(argc, argv);
+    }catch(QhullError &e){
+        cerr << e.what() << std::endl;
+        return e.errorCode();
+    }
+}//main
+
+int user_eg3(int argc, char **argv)
+{
+  RboxPoints rbox;
+  const char *testbox;
+  Qhull qhull;
+  cerr << "Dimension Count Coordinates\n";
+  std::string line;
+  line = ""; 
+  std::istringstream is("2 4 1 0 1 1 0 0 0 1");
+  std::stringstream output;
+  //testbox = "2 4 1 0 1 1 0 0 0 1";
+  //cin >> testbox;
+  //const char *myint= "2","4","1","0","1","1","0","0","0","1"};
+  //cerr <<"This is what testbox has: " << testbox << "$$$" ;
+    
+  rbox.appendPoints(is);
+  //rbox.appendPoints(testbox);
+  cerr << "@@@@@@@@@@\n" << rbox << "@@@@@@@@@@\n";
+  qhull.runQhull(rbox, "");
+  qhull.setOutputStream(&output);
+  qhull.outputQhull("m");
+  cerr << "My Output : " << output.str() << "%%\n";
+  qhull.setOutputStream(&cout);
+  qhull.outputQhull("n");
+  return 0;
+}//user_eg3
+

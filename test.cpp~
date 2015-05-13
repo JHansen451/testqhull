@@ -1,0 +1,21 @@
+include <iostream>
+extern "C" {
+#include <qhull/qhull_a.h>
+}
+ 
+using namespace std;
+ 
+int main(void) {
+  int numpoints = 4;
+  coordT points[] = {0,0,0, 1,0,0, 0,1,0, 0,0,1};
+  int dim = 3;
+  char flags[25];
+  sprintf (flags, "qhull s FA");
+ 
+  qh_new_qhull(dim, numpoints, points, 0, flags, NULL, NULL);
+  qh_getarea(qh facet_list);
+  cout << qh totvol << endl;
+  cout << qh totarea << endl;
+  qh_freeqhull(!qh_ALL);
+ 
+  return 0;
